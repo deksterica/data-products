@@ -1,0 +1,21 @@
+---
+title: "My Leaflet Map"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Interactive Map
+
+This map was created on `r format(Sys.Date(), "%B %d, %Y")`.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(leaflet)
+
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(lng=-122.4194, lat=37.7749, 
+             popup="San Francisco, CA") %>%
+  addMarkers(lng=-0.1276, lat=51.5074,
+             popup="London, UK") %>%
+  addMarkers(lng=139.6917, lat=35.6895,
+             popup="Tokyo, Japan")
+```
