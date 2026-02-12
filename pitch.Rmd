@@ -1,0 +1,106 @@
+---
+title: "Liguria Regional Income Analysis"
+subtitle: "Interactive Income Per Capita Visualization"
+author: "Dejan Dojcinovic"
+date: "February 12, 2026"
+output: ioslides_presentation
+---
+
+## The Challenge
+
+**Understanding regional economic disparities in Italy**
+
+- Income inequality varies significantly across regions and provinces
+- Data is scattered across ISTAT databases
+- Static reports fail to show trends over time
+- Difficult to compare Liguria with neighboring regions
+
+**Solution needed:**
+A tool to visualize and explore income patterns interactively
+
+## The Solution: Interactive Shiny App
+
+**Key Features:**
+
+- 📊 **27 locations**: 5 regions + 22 provinces
+- 📅 **11 years**: Income data from 2014-2024
+- 🗺️ **Interactive map**: Click to explore detailed statistics
+- 📈 **Dynamic charts**: Compare trends across locations
+- 🎚️ **Multiple views**: Regional, provincial, or combined
+
+**Live Demo:** [Your Shiny App URL]
+
+## Sample Data Analysis
+```{r echo=TRUE, message=FALSE, warning=FALSE, fig.height=4}
+# Income data for Liguria provinces (2014-2024)
+library(ggplot2)
+library(dplyr)
+
+liguria_provinces <- data.frame(
+  Province = rep(c("Genova", "Imperia", "Savona", "La Spezia"), each = 11),
+  Year = rep(2014:2024, 4),
+  Income = c(
+    # Genova
+    25200, 25500, 25800, 26300, 26700, 27100, 26500, 27900, 28700, 29400, 30100,
+    # Imperia
+    22800, 23100, 23400, 23900, 24300, 24700, 24100, 25400, 26100, 26700, 27400,
+    # Savona
+    23900, 24200, 24500, 25000, 25400, 25800, 25200, 26600, 27400, 28100, 28800,
+    # La Spezia
+    24100, 24400, 24700, 25200, 25600, 26000, 25400, 26800, 27600, 28300, 29000
+  )
+)
+
+# Calculate average income per province
+avg_income <- aggregate(Income ~ Province, liguria_provinces, mean)
+print(avg_income)
+```
+
+## Income Growth Visualization
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.height=4.5, fig.width=8}
+library(ggplot2)
+
+ggplot(liguria_provinces, aes(x = Year, y = Income, color = Province, group = Province)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3")) +
+  labs(
+    title = "Income Per Capita Trends: Liguria Provinces (2014-2024)",
+    x = "Year",
+    y = "Income per Capita (€)",
+    color = "Province"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    legend.position = "bottom"
+  ) +
+  scale_y_continuous(labels = scales::comma)
+```
+
+**Key finding:** Genova consistently leads, but all provinces show growth post-2020
+
+## Why This Matters
+
+**Statistical Insights:**
+```{r echo=TRUE}
+# Calculate decade growth for each province
+growth_2014_2024 <- liguria_provinces %>%
+  filter(Year %in% c(2014, 2024)) %>%
+  group_by(Province) %>%
+  summarize(
+    Income_2014 = Income[Year == 2014],
+    Income_2024 = Income[Year == 2024],
+    Growth_Percent = round(((Income_2024 - Income_2014) / Income_2014) * 100, 1)
+  )
+
+print(growth_2014_2024)
+```
+
+**Impact:**
+- **Policy makers**: Identify economic disparities
+- **Researchers**: Analyze regional development patterns  
+- **Citizens**: Understand local economic health
+- **Investors**: Make informed location decisions
+
+**Try it yourself:** [Your Shiny App URL]
